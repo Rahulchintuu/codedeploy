@@ -43,7 +43,7 @@ jobs:
       - name: Apply Kubernetes Manifests
         run: |
           kubectl apply -f ecomm.yaml
-          kubectl apply -f ecomservice.yaml
+          kubectl apply -f ecommservice.yaml
 
       - name: Set Latest Image in Deployment
         run: |
