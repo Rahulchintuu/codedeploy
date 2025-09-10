@@ -3,7 +3,7 @@ name: Build, Push to ECR, and Deploy to EKS
 on:
   push:
     branches: [main]
-
+    
 env:
   IMAGE_TAG: v0.1
   AWS_REGION: ap-south-1
