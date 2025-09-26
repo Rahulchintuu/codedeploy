@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>org.com.web</groupId>
+<artifactId>webproject</artifactId>
+<version>1.0-SNAPSHOT</version>
+<packaging>war</packaging>
+<name>webproject Maven Webapp</name>
+<build>
+<finalName>webproject</finalName>
+<plugins>
+        <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+        </plugin>
+</plugins>
+</build>
+<profiles>
+        <profile>
+                <id>dev</id>
+                <properties>
+                        <tomcat.url>http://<your dev ip>:8080/manager/text</tomcat.url>
+                </properties>
+                <build>
+                        <plugins>
+                                <plugin>
+                                        <groupId>org.apache.tomcat.maven</groupId>
+                                        <artifactId>tomcat7-maven-plugin</artifactId>
+                                        <version>2.2</version>
+                                        <configuration>
+                                                <url>${tomcat.url}</url>
+                                                <server>tomcat-dev</server>
+                                                <path>/CodeDeploy</path>
+                                        </configuration>
+                                </plugin>
+                        </plugins>
+                </build>
+        </profile>
+         <profile>
+                <id>qa</id>
+                <properties>
+                        <tomcat.url>http://<your-qa-ip>:8080/manager/text</tomcat.url>
+                </properties>
+                <build>
+                        <plugins>
+                                <plugin>
+                                        <groupId>org.apache.tomcat.maven</groupId>
+                                        <artifactId>tomcat7-maven-plugin</artifactId>
+                                        <version>2.2</version>
+                                        <configuration>
+                                                <url>${tomcat.url}</url>
+                                                <server>tomcat-qa</server>
+                                                <path>/CodeDeploy</path>
+                                        </configuration>
+                                </plugin>
+                        </plugins>
+                </build>
+        </profile>
+         <profile>
+                <id>uat</id>
+                <properties>
+                        <tomcat.url>http://<your-uat-ip>:8080/manager/text</tomcat.url>
+                </properties>
+                <build>
+                        <plugins>
+                                <plugin>
+                                        <groupId>org.apache.tomcat.maven</groupId>
+                                        <artifactId>tomcat7-maven-plugin</artifactId>
+                                        <version>2.2</version>
+                                        <configuration>
+                                                <url>${tomcat.url}</url>
+                                                <server>tomcat-uat</server>
+                                                <path>/CodeDeploy</path>
+                                        </configuration>
+                                </plugin>
+                        </plugins>
+                </build>
+        </profile>
+</profiles>
+</project>
