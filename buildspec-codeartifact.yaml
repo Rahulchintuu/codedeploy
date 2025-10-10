@@ -34,30 +34,9 @@ phases:
   post_build:
     commands:
       - echo "Publishing to CodeArtifact..."
-      
-      # Create deployment bundle
       - zip -r deployment-bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
-      
-      # Calculate SHA256 hash of the deployment bundle
       - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | cut -d ' ' -f 1)
       - echo "SHA256 hash: $ASSET_SHA256"
-      
-      # Get authorization token
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
-      
-      # Publish to CodeArtifact with SHA256 hash
-      - |
-        aws codeartifact publish-package-version \
-          --domain $DOMAIN \
-          --domain-owner $ACCOUNT_ID \
-          --repository $REPOSITORY \
-          --format generic \
-          --namespace $PACKAGE_NAMESPACE \
-          --package $PACKAGE_NAME \
-          --package-version 1.0.${CODEBUILD_BUILD_NUMBER} \
-          --asset-content deployment-bundle.zip \
-          --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip \
-          --asset-sha256 $ASSET_SHA256 \
-          --region $REGION
-      
+      - aws codeartifact publish-package-version --domain $DOMAIN --domain-owner $ACCOUNT_ID --repository $REPOSITORY --format generic --namespace $PACKAGE_NAMESPACE --package $PACKAGE_NAME --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content deployment-bundle.zip --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $ASSET_SHA256 --region $REGION
       - echo "Published to CodeArtifact version 1.0.${CODEBUILD_BUILD_NUMBER}"
