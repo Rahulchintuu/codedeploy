@@ -37,7 +37,7 @@ phases:
     commands:
       - echo "Publishing to CodeArtifact..."
       - zip -r deployment-bundle.zip target/Ecomm.war appspec-codeartifact.yaml scripts/ tomcat-users.xml
-      - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | cut -d ' ' -f 1)
+      - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | awk '{print $1}')
       - echo "SHA256 hash: $ASSET_SHA256"
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
       - aws codeartifact publish-package-version --domain $DOMAIN --domain-owner $ACCOUNT_ID --repository $REPOSITORY --format generic --namespace $PACKAGE_NAMESPACE --package $PACKAGE_NAME --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content deployment-bundle.zip --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $ASSET_SHA256 --region $REGION
