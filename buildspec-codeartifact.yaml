@@ -1,0 +1,51 @@
+version: 0.2
+
+env:
+  variables:
+    DOMAIN: "project2"
+    REPOSITORY: "project2_carepo"
+    REGION: "ap-south-1"
+    ACCOUNT_ID: "975050380744"
+    PACKAGE_NAME: "EcommWebApp"
+    PACKAGE_NAMESPACE: "ecomm-app"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - echo "Installing Maven and AWS CLI..."
+      - yum install -y maven
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install --update
+
+  pre_build:
+    commands:
+      - echo "CodeArtifact Build - No S3"
+      - mvn --version
+      - aws --version
+
+  build:
+    commands:
+      - echo "Building the WAR file..."
+      - mvn clean package -DskipTests
+
+  post_build:
+    commands:
+      - echo "Publishing to CodeArtifact..."
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
+      - zip -r deployment-bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
+      - |
+        aws codeartifact publish-package-version \
+          --domain $DOMAIN \
+          --domain-owner $ACCOUNT_ID \
+          --repository $REPOSITORY \
+          --format generic \
+          --namespace $PACKAGE_NAMESPACE \
+          --package $PACKAGE_NAME \
+          --package-version 1.0.${CODEBUILD_BUILD_NUMBER} \
+          --asset-content deployment-bundle.zip \
+          --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip \
+          --region $REGION
+      - echo "Published to CodeArtifact version 1.0.${CODEBUILD_BUILD_NUMBER}"
