@@ -39,7 +39,7 @@ phases:
   post_build:
     commands:
       - echo "Publishing to CodeArtifact..."
-      - zip -r deployment-bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
+      - zip -r deployment-bundle.zip target/Ecomm.war appspec-codeartifact.yaml scripts/ tomcat-users.xml
       - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | cut -d ' ' -f 1)
       - echo "SHA256 hash: $ASSET_SHA256"
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
