@@ -24,8 +24,6 @@ phases:
   pre_build:
     commands:
       - echo "=== Preparing build environment ==="
-      - echo "Domain: $DOMAIN, Repository: $REPOSITORY"
-      - echo "Package: $PACKAGE_NAMESPACE/$PACKAGE_NAME"
 
   build:
     commands:
