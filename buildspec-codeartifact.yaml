@@ -20,9 +20,10 @@ phases:
       - mvn clean package -DskipTests
 
   post_build:
-    commands:
-      - zip -r bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
-      - HASH=$(sha256sum bundle.zip | awk '{print $1}')
-      - TOKEN=$(aws codeartifact get-authorization-token --domain project2 --domain-owner 975050380744 --region ap-south-1 --query authorizationToken --output text)
-      - aws codeartifact publish-package-version --domain project2 --domain-owner 975050380744 --repository project2_carepo --format generic --namespace ecomm-app --package EcommWebApp --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content bundle.zip --asset-name bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $HASH --region ap-south-1
-      - echo "Build completed"
+  commands:
+    - echo "Publishing to CodeArtifact..."
+    - zip -r deployment-bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
+    - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | awk '{print $1}')
+    - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
+    - aws codeartifact publish-package-version --domain $DOMAIN --domain-owner $ACCOUNT_ID --repository $REPOSITORY --format generic --namespace $PACKAGE_NAMESPACE --package $PACKAGE_NAME --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content deployment-bundle.zip --asset-name bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $ASSET_SHA256 --region $REGION
+    - echo "Published to CodeArtifact version 1.0.${CODEBUILD_BUILD_NUMBER}"
