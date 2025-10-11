@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
-
-echo "[INFO] Cleaning up old deployment files..."
-rm -f /home/ec2-user/Ecomm.war
-rm -f /home/ec2-user/tomcat-users.xml
+echo "======== Cleaning up previous deployment ========"
+sudo systemctl stop tomcat || true
+sudo rm -rf /usr/share/tomcat/webapps/Ecomm*
+sudo rm -rf /usr/share/tomcat/work/Catalina/localhost/Ecomm
+echo "Cleanup completed"
