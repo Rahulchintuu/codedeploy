@@ -1,32 +1,44 @@
-version: 0.0
-os: linux
+version: 0.2
 
-hooks:
-  BeforeInstall:
-    - location: scripts/download_from_codeartifact.sh
-      timeout: 300
-      runas: ec2-user
-    - location: scripts/cleanup.sh
-      timeout: 60
-      runas: ec2-user
-    - location: scripts/install_tomcat.sh
-      timeout: 600
-      runas: ec2-user
+env:
+  variables:
+    DOMAIN: "project2"
+    REPOSITORY: "project2_carepo"
+    REGION: "ap-south-1"
+    ACCOUNT_ID: "975050380744"
+    PACKAGE_NAME: "EcommWebApp"
+    PACKAGE_NAMESPACE: "ecomm-app"
 
-  AfterInstall:
-    - location: scripts/configure_tomcat.sh
-      timeout: 300
-      runas: ec2-user
-    - location: scripts/deploy_war.sh
-      timeout: 300
-      runas: ec2-user
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - echo "Installing Maven and AWS CLI..."
+      - yum install -y maven
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip
+      - sudo ./aws/install --update
 
-  ApplicationStart:
-    - location: scripts/start_tomcat.sh
-      timeout: 120
-      runas: ec2-user
+  pre_build:
+    commands:
+      - echo "CodeArtifact Build - No S3"
+      - mvn --version
+      - aws --version
 
-  ValidateService:
-    - location: scripts/validate.sh
-      timeout: 60
-      runas: ec2-user
+  build:
+    commands:
+      - echo "Building the WAR file..."
+      - mvn clean package -DskipTests
+      - echo "Copying WAR to artifact root..."
+      - cp target/Ecomm.war .
+
+  post_build:
+    commands:
+      - echo "Publishing to CodeArtifact..."
+      - zip -r deployment-bundle.zip target/Ecomm.war appspec-codeartifact.yaml scripts/ tomcat-users.xml
+      - export ASSET_SHA256=$(sha256sum deployment-bundle.zip | awk '{print $1}')
+      - echo "SHA256 hash: $ASSET_SHA256"
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain $DOMAIN --domain-owner $ACCOUNT_ID --region $REGION --query authorizationToken --output text)
+      - aws codeartifact publish-package-version --domain $DOMAIN --domain-owner $ACCOUNT_ID --repository $REPOSITORY --format generic --namespace $PACKAGE_NAMESPACE --package $PACKAGE_NAME --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content deployment-bundle.zip --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $ASSET_SHA256 --region $REGION
+      - echo "Published to CodeArtifact version 1.0.${CODEBUILD_BUILD_NUMBER}"
