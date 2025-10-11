@@ -7,34 +7,22 @@ env:
     REPOSITORY: "project2_carepo"
     REGION: "ap-south-1"
     ACCOUNT_ID: "975050380744"
-    PACKAGE_NAME: "EcommWebApp"
-    PACKAGE_NAMESPACE: "ecomm-app"
 
 phases:
   install:
     runtime-versions:
       java: corretto11
     commands:
-      - echo "Installing tools..."
       - yum install -y maven
-      - curl -O https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-      - unzip awscli-exe-linux-x86_64.zip
-      - sudo ./aws/install
 
   build:
     commands:
-      - echo "Building application..."
       - mvn clean package -DskipTests
 
   post_build:
     commands:
-      - echo "Packaging artifacts..."
-      - zip -r deployment-bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
-      - echo "Calculating SHA256..."
-      - ASSET_SHA256=$(sha256sum deployment-bundle.zip | awk '{print $1}')
-      - echo "Getting CodeArtifact token..."
-      - CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain project2 --domain-owner 975050380744 --region ap-south-1 --query authorizationToken --output text)
-      - echo "Publishing to CodeArtifact..."
-      - aws codeartifact publish-package-version --domain project2 --domain-owner 975050380744 --repository project2_carepo --format generic --namespace ecomm-app --package EcommWebApp --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content deployment-bundle.zip --asset-name deployment-bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $ASSET_SHA256 --region ap-south-1
-      - echo "Build completed successfully"
-      
+      - zip -r bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
+      - HASH=$(sha256sum bundle.zip | awk '{print $1}')
+      - TOKEN=$(aws codeartifact get-authorization-token --domain project2 --domain-owner 975050380744 --region ap-south-1 --query authorizationToken --output text)
+      - aws codeartifact publish-package-version --domain project2 --domain-owner 975050380744 --repository project2_carepo --format generic --namespace ecomm-app --package EcommWebApp --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content bundle.zip --asset-name bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $HASH --region ap-south-1
+      - echo "Build completed"
