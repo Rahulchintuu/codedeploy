@@ -21,7 +21,7 @@ phases:
 
   post_build:
     commands:
-      - zip -r bundle.zip target/Ecomm.war appspec.yml scripts/ tomcat-users.xml
+      - zip -r bundle.zip target/Ecomm.war appspec-codeartifact.yaml.yml scripts/ tomcat-users.xml
       - HASH=$(sha256sum bundle.zip | awk '{print $1}')
       - TOKEN=$(aws codeartifact get-authorization-token --domain project2 --domain-owner 975050380744 --region ap-south-1 --query authorizationToken --output text)
       - aws codeartifact publish-package-version --domain project2 --domain-owner 975050380744 --repository project2_carepo --format generic --namespace ecomm-app --package EcommWebApp --package-version 1.0.${CODEBUILD_BUILD_NUMBER} --asset-content bundle.zip --asset-name bundle-${CODEBUILD_BUILD_NUMBER}.zip --asset-sha256 $HASH --region ap-south-1
