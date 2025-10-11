@@ -17,8 +17,6 @@ echo "Detected JAVA_HOME=$JAVA_HOME_PATH"
 
 echo "======== Installing Tomcat ========="
 if [ ! -d "$TOMCAT_DIR" ]; then
-    sudo mkdir -p /opt
-    cd /opt
     sudo curl -O https://archive.apache.org/dist/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
     sudo tar -xzf apache-tomcat-$TOMCAT_VERSION.tar.gz
     sudo mv apache-tomcat-$TOMCAT_VERSION tomcat
