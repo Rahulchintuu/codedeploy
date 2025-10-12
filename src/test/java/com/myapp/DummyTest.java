@@ -1,11 +1,13 @@
 package com.myapp;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DummyTest {
+public class AppTest {
+
     @Test
-    public void alwaysPasses() {
-        assertTrue(true);
+    void testGreet() {
+        App app = new App();
+        assertEquals("Hello", app.greet());
     }
 }
