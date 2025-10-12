@@ -1,7 +1,13 @@
 package com.myapp;
 
-public class App {
-    public String sayHello() {
-        return "Hello, World!";
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AppTest {
+
+    @Test
+    void testSomething() {
+        App app = new App();
+        assertEquals("Hello", app.greet());
     }
 }
