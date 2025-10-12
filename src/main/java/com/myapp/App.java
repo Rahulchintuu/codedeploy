@@ -1,9 +1,8 @@
+
 package com.myapp;
 
 public class App {
-
-    // A simple greeting method
-    public String greet() {
-        return "Hello, World!";
+    public int add(int a, int b) {
+        return a + b;
     }
 }
