@@ -1,13 +1,9 @@
 package com.myapp;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+public class App {
 
-public class AppTest {
-
-    @Test
-    void testSomething() {
-        App app = new App();
-        assertEquals("Hello", app.greet());
+    // A simple greeting method
+    public String greet() {
+        return "Hello, World!";
     }
 }
