@@ -119,6 +119,20 @@
 					</includes>
 				</configuration>
 			</plugin>
+			<plugin>
+				    <groupId>org.cyclonedx</groupId>
+				    <artifactId>cyclonedx-maven-plugin</artifactId>
+				    <version>2.8.0</version> <!-- use latest stable -->
+				<executions>
+					<execution>
+						<id>make-bom</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>makeAggregateBom</goal> <!-- or 'makeBom' if single module -->
+            			</goals>
+        			</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
