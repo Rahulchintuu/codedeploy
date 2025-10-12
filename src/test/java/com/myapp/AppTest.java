@@ -4,7 +4,9 @@ package com.myapp;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AppTest {
+// REMOVE 'public' here
+class AppTest {
+
     @Test
     void testAdd() {
         App app = new App();
