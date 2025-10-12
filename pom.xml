@@ -20,7 +20,7 @@
         </snapshotRepository>
     </distributionManagement>
 	<properties>
-    	<sonar.exclusions>**/*.java</sonar.exclusions>
+    	<sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries>
 	</properties>
 
 	
