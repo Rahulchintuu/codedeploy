@@ -69,6 +69,43 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <version>3.1.2</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		<!-- Maven Failsafe Plugin for Integration Tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+        <!-- Run integration tests during the integration-test phase -->
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+        			</execution>
+        <!-- Verify results during the verify phase -->
+        			<execution>
+            			<id>verify</id>
+						<goals>
+                			<goal>verify</goal>
+            			</goals>
+        			</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include> <!-- Integration test naming pattern -->
+					</includes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
