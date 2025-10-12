@@ -11,12 +11,12 @@
         <repository>
             <id>central</id>
             <name>ip-172-31-10-127.ap-northeast-3.compute.internal-releases</name>
-            <url>http://3.110.223.194:8081/artifactory/etoe</url>
+            <url>http://43.204.220.142:8081/artifactory/etoe</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>ip-172-31-10-127.ap-northeast-3.compute.internal-snapshots</name>
-            <url>http://13.201.184.143:8081/artifactory/etoe</url>
+            <url>http://43.204.220.142:8081/artifactory/etoe</url>
         </snapshotRepository>
     </distributionManagement>
 	<dependencies>
@@ -47,7 +47,28 @@
       			<artifactId>sonar-maven-plugin</artifactId>
       			<version>3.9.1.2184</version>
     		</plugin>
-  		
+			<plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>0.8.12</version>
+				<executions>
+        <!-- Prepare agent before tests -->
+        			<execution>
+			            <id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+        <!-- Generate report after tests -->
+					<execution>
+				        <id>report</id>
+				        <phase>verify</phase>
+            			<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
