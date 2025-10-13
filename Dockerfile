@@ -1,21 +1,27 @@
-# -------- Stage 1: Build with Maven using JDK 17 --------
-FROM maven:3.8.3-openjdk-17 AS build
+# -------- Stage 1: Build with Maven using Java 11 --------
+FROM maven:3.8.3-openjdk-11 AS build
 WORKDIR /app
 
-# Copy all project files
+# Copy Maven settings for private repos (if needed)
+# COPY settings.xml /root/.m2/settings.xml
+
+# Copy project files
 COPY . .
 
-# Build the project with Java 17
-RUN mvn clean package -DskipTests -Dmaven.compiler.source=17 -Dmaven.compiler.target=17 -X
+# Build project (skip tests for faster builds)
+RUN mvn clean package -DskipTests -Dmaven.compiler.source=11 -Dmaven.compiler.target=11
 
-# -------- Stage 2: Run on Tomcat using JDK 17 --------
-FROM tomcat:10-jdk17
+# -------- Stage 2: Run on Tomcat 7 --------
+FROM tomcat:7.0.109-jdk11
 WORKDIR /usr/local/tomcat
 
-# Copy WAR file from build stage
+# Remove default ROOT app
+RUN rm -rf webapps/ROOT
+
+# Copy WAR from build stage
 COPY --from=build /app/target/*.war webapps/ROOT.war
 
-# Expose default Tomcat port
+# Expose Tomcat port
 EXPOSE 8080
 
 # Start Tomcat
