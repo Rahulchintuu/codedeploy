@@ -7,10 +7,11 @@ TOMCAT_USER="ec2-user"
 echo "======== Updating system ========="
 sudo yum update -y
 
-echo "======== Installing Java 11 ========="
+echo "======== Installing Java 17 ========="
 if ! java -version &>/dev/null; then
-  sudo yum install -y java-11-amazon-corretto
+  sudo yum install -y java-17-amazon-corretto
 fi
+
 
 JAVA_HOME_PATH=$(dirname $(dirname $(readlink -f $(which java))))
 echo "Detected JAVA_HOME=$JAVA_HOME_PATH"
