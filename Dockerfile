@@ -6,8 +6,8 @@ COPY . .
 
 RUN mvn clean package -DskipTests -Dmaven.compiler.source=17 -Dmaven.compiler.target=17
 
-# Stage 2: Run on Tomcat 10 + Java 17
-FROM tomcat:10-jdk17
+# Stage 2: Run on Tomcat 9 + Java 17
+FROM tomcat:9.0.88-jdk17
 WORKDIR /usr/local/tomcat
 
 # Remove default ROOT app
