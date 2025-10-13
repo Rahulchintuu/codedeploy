@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 # Build the project with Java 17
-RUN mvn clean package -DskipTests -Dmaven.compiler.source=17 -Dmaven.compiler.target=17
+RUN mvn clean package -DskipTests -Dmaven.compiler.source=17 -Dmaven.compiler.target=17 -X
 
 # -------- Stage 2: Run on Tomcat using JDK 17 --------
 FROM tomcat:10-jdk17
