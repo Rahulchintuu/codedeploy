@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ecomm
+  name: codedeploy-app
   labels:
-    app: ecomm
+    app: codedeploy-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: ecomm
+      app: codedeploy-app
   template:
     metadata:
       labels:
-        app: ecomm
+        app: codedeploy-app
     spec:
       containers:
-      - name: ecomm
-        image: 325511643680.dkr.ecr.ap-south-1.amazonaws.com/etoe/app:v0.5
+      - name: codedeploy-app
+        image: 975050380744.dkr.ecr.ap-south-1.amazonaws.com/codedeploy
         ports:
         - containerPort: 8080
 
