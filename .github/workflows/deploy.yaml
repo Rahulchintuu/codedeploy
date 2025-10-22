@@ -7,8 +7,11 @@ on:
 env:
   IMAGE_TAG: v0.1
   AWS_REGION: ap-south-1
+  
   REPOSITORY_URI: 975050380744.dkr.ecr.ap-south-1.amazonaws.com/codedeploy
-  CLUSTER_NAME: mycluster01
+  # give your ecr URI ID  
+  
+  CLUSTER_NAME: mycluster01  #change according to your cluster name 
   K8S_NAMESPACE: default
   DEPLOYMENT_NAME: codedeploy-app
 
@@ -23,6 +26,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
+        #GIVE NAMES AS YOUR SECRET KEYS
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
