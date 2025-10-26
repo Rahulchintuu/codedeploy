@@ -1,4 +1,6 @@
 apiVersion: v2
 name: epro
+description: Helm chart for epro application
+type: application
 version: 0.1.0
-description: Epro web app deployment
+appVersion: "1.0"
