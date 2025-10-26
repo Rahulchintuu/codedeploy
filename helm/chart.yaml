@@ -1,0 +1,4 @@
+apiVersion: v2
+name: epro
+version: 0.1.0
+description: Epro web app deployment
