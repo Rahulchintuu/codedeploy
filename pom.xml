@@ -11,12 +11,12 @@
         <repository>
             <id>central</id>
             <name>ip-172-31-10-127.ap-northeast-3.compute.internal-releases</name>
-            <url>http://65.2.78.83:8081/artifactory/etoe</url>
+            <url>http://13.201.184.196:8081/artifactory/etoe</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>ip-172-31-10-127.ap-northeast-3.compute.internal-snapshots</name>
-            <url>http://65.2.78.83/:8081/artifactory/etoe</url>
+            <url>http://13.201.184.196/:8081/artifactory/etoe</url>
         </snapshotRepository>
     </distributionManagement>
 	<properties>
